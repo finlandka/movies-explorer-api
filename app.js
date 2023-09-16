@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const { errors } = require('celebrate');
 const config = require('./config');
 const limiter = require('./middlewares/rateLimit');
+const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const users = require('./routes/users');
 const movies = require('./routes/movies');
@@ -21,6 +22,7 @@ const { createUser, login } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
+app.use(cors);
 mongoose.connect(config.DB_URL, {});
 
 app.use(helmet());
