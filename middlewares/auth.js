@@ -39,7 +39,7 @@ const auth = (req, res, next) => {
 };
 
 const deleteCookies = (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', { domain: '.voloh.nomoredomainsrocks.ru' });
   res.end();
 };
 
