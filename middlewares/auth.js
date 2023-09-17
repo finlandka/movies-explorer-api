@@ -31,8 +31,11 @@ const auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, NODE_ENV !== 'production' ? '5b862e21cb7facfaa3fed4e2f99fbd84eb55eb4d4d7226db2754a056cc3aacc6' : JWT_SECRET);
   } catch (err) {
-    next(err);
-    return;
+    if (err.name === 'JsonWebTokenError') {
+      next(new UnauthorizedError(constants.UNAUTHORIZED));
+    } else {
+      next(err);
+    }
   }
   req.user = payload;
   next();
