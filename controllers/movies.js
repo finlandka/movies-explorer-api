@@ -5,7 +5,7 @@ const errorMessages = require('../errorMessages');
 const { OK, CREATED } = require('../constantsStatus');
 
 const getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .populate('owner')
     .then((movie) => res.status(OK).send({ data: movie }))
     .catch((err) => next(err));
