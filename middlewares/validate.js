@@ -9,7 +9,7 @@ const validateAuth = celebrate({
 
 const validateRegister = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email().regex(/[\w-]+@[\w-]*\.[a-z]*/),
     password: Joi.string().required(),
   }),
@@ -17,9 +17,9 @@ const validateRegister = celebrate({
 
 const validateUpdateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().email().optional().regex(/[\w-]+@[\w-]*\.[a-z]*/),
-  }).unknown(true),
+    name: Joi.string().required().min(2).max(30),
+    email: Joi.string().email().required().regex(/[\w-]+@[\w-]*\.[a-z]*/),
+  }),
 });
 
 const validateCreateMovie = celebrate({
@@ -35,7 +35,7 @@ const validateCreateMovie = celebrate({
     director: Joi.string().required(),
     duration: Joi.number().required(),
     year: Joi.string().required(),
-  }).unknown(true),
+  }),
 });
 
 const validateMovieId = celebrate({

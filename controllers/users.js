@@ -2,24 +2,30 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const errorMessages = require('../errorMessages');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const { OK, CREATED } = require('../constantsStatus');
 
 const getUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new NotFoundError('Пользователь по указанному _id не найден. Не существующий _id'))
+    .orFail(new NotFoundError(errorMessages.NOT_FOUND))
     .then((user) => res.status(OK).send({ data: user }))
     .catch((err) => next(err));
 };
 
 const updateUser = (req, res, next) => {
-  const updates = {};
-  if (req.body.name) updates.name = req.body.name;
-  if (req.body.email) updates.email = req.body.email;
-  User.findByIdAndUpdate(req.user._id, updates, { new: true, runValidators: true })
+  const { name, email } = req.body;
+  User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => res.status(OK).send({ data: user }))
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError(errorMessages.CONFLICT));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const createUser = (req, res, next) => {
@@ -37,7 +43,7 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
+        next(new ConflictError(errorMessages.CONFLICT));
       } else {
         next(err);
       }
