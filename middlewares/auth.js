@@ -2,6 +2,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const constants = require('../constants');
+const { OK } = require('../constantsStatus');
 
 function getTokenFromHeaders(rawHeaders) {
   let token = null;
@@ -43,7 +44,7 @@ const auth = (req, res, next) => {
 
 const deleteCookies = (req, res) => {
   res.clearCookie('token', { domain: '.voloh.nomoredomainsrocks.ru' });
-  res.status(constants.OK).json({ message: constants.SUCCESS_LOGOUT });
+  res.status(OK).json({ message: constants.SUCCESS_LOGOUT });
 };
 
 module.exports = { auth, deleteCookies };

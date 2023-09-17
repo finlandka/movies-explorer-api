@@ -2,11 +2,12 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 const constants = require('../constants');
+const { OK, CREATED } = require('../constantsStatus');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .populate('owner')
-    .then((movie) => res.status(constants.OK).send({ data: movie }))
+    .then((movie) => res.status(OK).send({ data: movie }))
     .catch((err) => next(err));
 };
 
@@ -39,7 +40,7 @@ const createMovie = (req, res, next) => {
     year,
   })
     .then((movie) => Movie.findById(movie._id).populate('owner'))
-    .then((movie) => res.status(constants.CREATED).send({ data: movie }))
+    .then((movie) => res.status(CREATED).send({ data: movie }))
     .catch((err) => next(err));
 };
 
@@ -52,7 +53,7 @@ const deleteMovie = (req, res, next) => {
       }
       Movie.deleteOne(movie)
         .then((deletedMovie) => {
-          res.status(constants.OK).send({ data: deletedMovie });
+          res.status(OK).send({ data: deletedMovie });
         })
         .catch((err) => next(err));
     })

@@ -6,22 +6,22 @@ const constants = require('../constants');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    minlength: [2, 'Минимальная длина поля "name" - 2'],
-    maxlength: [30, 'Максимальная длина поля "name" - 30'],
+    required: [true, constants.REQUIRED],
+    minlength: [2, constants.MINLENGTH],
+    maxlength: [30, constants.MAXLENGTH],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, constants.REQUIRED],
     unique: true,
     validate: {
       validator: (v) => /[\w-]+@[\w-]*\.[a-z]*/.test(v),
-      message: 'Некорректный email',
+      message: constants.INCORRECT_EMAIL,
     },
   },
   password: {
     type: String,
-    required: true,
+    required: [true, constants.REQUIRED],
     select: false,
   },
 }, { versionKey: false });
