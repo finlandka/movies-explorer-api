@@ -43,7 +43,11 @@ const auth = (req, res, next) => {
 };
 
 const deleteCookies = (req, res) => {
-  res.clearCookie('token', { domain: '.voloh.nomoredomainsrocks.ru' });
+  res.clearCookie('token', {
+    domain: '.voloh.nomoredomainsrocks.ru',
+    httpOnly: true,
+    sameSite: 'none',
+  });
   res.status(OK).json({ message: constants.SUCCESS_LOGOUT });
 };
 
