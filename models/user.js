@@ -9,12 +9,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: [2, 'Минимальная длина поля "name" - 2'],
     maxlength: [30, 'Максимальная длина поля "name" - 30'],
-    validate: {
-      validator(v) {
-        return v.length >= 2 && v.length <= 30;
-      },
-      message: 'Количество символов должно быть от 2 до 30',
-    },
   },
   email: {
     type: String,
