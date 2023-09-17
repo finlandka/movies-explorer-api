@@ -54,13 +54,17 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV !== 'production' ? '5b862e21cb7facfaa3fed4e2f99fbd84eb55eb4d4d7226db2754a056cc3aacc6' : JWT_SECRET, { expiresIn: '7d' });
-      res.cookie('token', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: 'none',
-        domain: '.voloh.nomoredomainsrocks.ru',
-      }).send({ token });
+      try {
+        const token = jwt.sign({ _id: user._id }, NODE_ENV !== 'production' ? '5b862e21cb7facfaa3fed4e2f99fbd84eb55eb4d4d7226db2754a056cc3aacc6' : JWT_SECRET, { expiresIn: '7d' });
+        res.cookie('token', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: 'none',
+          domain: '.voloh.nomoredomainsrocks.ru',
+        }).send({ token });
+      } catch (err) {
+        next(err);
+      }
     })
     .catch((err) => next(err));
 };

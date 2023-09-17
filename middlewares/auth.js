@@ -1,7 +1,8 @@
 const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
-
+const errorMessages = require('../errorMessages');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const { OK } = require('../constantsStatus');
 
 function getTokenFromHeaders(rawHeaders) {
   let token = null;
@@ -24,7 +25,7 @@ const auth = (req, res, next) => {
     ? req.cookies
     : { token: getTokenFromHeaders(req.rawHeaders) };
   if (!token) {
-    next(new UnauthorizedError('Необходима авторизация'));
+    next(new UnauthorizedError(errorMessages.UNAUTHORIZED));
     return;
   }
   let payload;
@@ -40,7 +41,7 @@ const auth = (req, res, next) => {
 
 const deleteCookies = (req, res) => {
   res.clearCookie('token', { domain: '.voloh.nomoredomainsrocks.ru' });
-  res.end();
+  res.status(OK).json({ message: 'Успешно разлогинились' });
 };
 
 module.exports = { auth, deleteCookies };
