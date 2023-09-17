@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-const errorMessages = require('../errorMessages');
+const constants = require('../constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -36,12 +36,12 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError(errorMessages.UNAUTHORIZED);
+        throw new UnauthorizedError(constants.UNAUTHORIZED);
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new UnauthorizedError(errorMessages.UNAUTHORIZED);
+            throw new UnauthorizedError(constants.UNAUTHORIZED);
           }
           return user;
         });

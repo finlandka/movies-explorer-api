@@ -20,7 +20,7 @@ const errorHandler = require('./middlewares/error-handler');
 const { validateAuth, validateRegister } = require('./middlewares/validate');
 const { createUser, login } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
-const errorMessages = require('./errorMessages');
+const constants = require('./constants');
 
 const app = express();
 app.use(cors);
@@ -39,7 +39,7 @@ app.post('/signup', validateRegister, createUser);
 app.post('/signout', auth, deleteCookies);
 
 app.use('*', auth, (req, res, next) => {
-  next(new NotFoundError(errorMessages.NOT_FOUND));
+  next(new NotFoundError(constants.NOT_FOUND));
 });
 
 app.use(errorLogger);
